@@ -6,8 +6,8 @@ import path from 'path';
 import { inspect } from 'util';
 
 import { sftpDeployer } from '..';
-import { CmdOptions } from '../cmd-options';
-import { SftpDeployConfig, SftpDeployConfigBase } from '../config';
+import { CmdOptions } from '../types/cmd-options';
+import { SftpDeployConfig, SftpDeployConfigBase } from '../types/config';
 
 const pkgPath = path.join(__dirname, '..', '..', 'package.json');
 const descriptionPath = path.join(__dirname, '..', '..', 'cmd-description.txt');
@@ -95,7 +95,7 @@ async function validateOptions(opts: Partial<CmdOptions>): Promise<CmdOptions> {
         key: requireProp(mergedOptions, 'key'),
         local: requireProp(mergedOptions, 'local'),
         target: requireProp(mergedOptions, 'target'),
-        staging: requireProp(mergedOptions, 'staging'),
+        staging: mergedOptions.staging,
         upload: requireProp(mergedOptions, 'upload')
     };
 }
