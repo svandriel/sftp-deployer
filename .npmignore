@@ -1,6 +1,6 @@
 .editorconfig
 .eslintignore
-.eslintrc.js
+.eslintrc.json
 .prettierignore
 .prettierrc.json
 .sftp.json
