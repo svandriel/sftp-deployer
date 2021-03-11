@@ -1,0 +1,15 @@
+Deploys a directory via SFTP by these steps:
+- Makes a tarball of the local directory
+- Uploads the tarball through SFTP
+- Extracts to a staging directory
+- Swaps the staging and target directories
+- Cleans uploaded file and old target directory
+
+A configuration file called .sftp.json can also be used:
+
+{
+    "host": "ssh.example.com",
+    ...
+}
+
+Explicitly provided options take precendence over those in the configuration file.

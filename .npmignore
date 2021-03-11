@@ -1,0 +1,15 @@
+.editorconfig
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc.json
+.sftp.json
+*.js.map
+*.log
+*.spec.d.ts
+*.spec.js
+coverage
+jest.config.js
+node_modules
+src
+tsconfig.json
