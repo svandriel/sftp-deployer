@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import bytes from 'bytes';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
@@ -8,84 +7,83 @@ import SshClient from 'ssh2-sftp-client';
 import tmp from 'tmp-promise';
 
 import { compressDirectory } from './compress-directory';
-import { sshExecCommand } from './ssh-exec-cmd';
+import { deployToStaging } from './deploy-to-staging';
+import { swapStagingWithProduction } from './swap-staging-with-production';
 import { SftpDeployConfig } from './types/config';
+import { uploadFile } from './upload-file';
 import { noop } from './util/noop';
-
-const rootDir = path.resolve(__dirname, '..');
 
 export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
     const progress = config.progress || noop;
     const succeed = config.succeed || noop;
+    const { host, port, username, localDir, stagingDir, targetDir, uploadDir } = config;
 
     // Create temp filename
     const tempFile = await tmp.file({
         prefix: 'upload-',
         postfix: '.tar.gz'
     });
-    const buildDir = path.join(rootDir, config.localDir);
-
-    // Compress the folder to the temp file
-    const fileSize = await compressDirectory({ sourceDir: buildDir, targetFile: tempFile.path, progress, succeed });
-
-    // Connect to the SSH server
-    progress(`Connecting to ${chalk.cyan(`${config.host}:${config.port}`)}...`);
-    const privateKey =
-        'privateKey' in config
-            ? config.privateKey
-            : await fs.readFile(path.resolve(rootDir, config.privateKeyFile), {
-                  encoding: 'utf-8'
-              });
-    const sftpClient = new SshClient();
-
-    await sftpClient.connect({
-        host: config.host,
-        username: config.username,
-        port: config.port,
-        privateKey
-    });
-    const sshClient = (sftpClient as any).client as Client;
-    succeed(`Connected to ${chalk.cyan(`${config.host}:${config.port}`)}`);
 
     try {
-        const remoteFilePath = path
-            .join(config.uploadDir, `build-${new Date().getTime()}.tar.gz`)
-            .replace(path.sep, '/');
-        const remoteStagingDir = config.stagingDir.replace(path.sep, '/').replace(/"/g, '\\"');
-        const remoteTargetDir = config.targetDir.replace(path.sep, '/').replace(/"/g, '\\"');
-
-        // Upload single file
-        progress('Uploading...');
-        const startUpload = new Date().getTime();
-        await sftpClient.fastPut(tempFile.path, remoteFilePath, {
-            step(totalTransferred) {
-                const percentage = `${((100 * totalTransferred) / fileSize).toFixed(0)}%`;
-                progress(`Uploading... ${chalk.bold(percentage)} [${chalk.cyan(`${bytes(totalTransferred)}`)}]`);
-            }
+        // Compress the folder to the temp file
+        const fileSize = await compressDirectory({
+            sourceDir: localDir,
+            targetFile: tempFile.path,
+            progress,
+            succeed
         });
-        const elapsedUpload = 0.001 * (new Date().getTime() - startUpload);
-        succeed(`Upload successful ${chalk.gray(`[${elapsedUpload.toFixed(1)}s]`)}`);
 
-        progress('Deploying to staging...');
-        await sshExecCommand(sshClient, `rm -rf "${remoteStagingDir}"`);
-        await sshExecCommand(sshClient, `mkdir -p "${remoteStagingDir}"`);
-        await sshExecCommand(sshClient, `tar xf "${remoteFilePath}" -C "${remoteStagingDir}"`);
-        await sshExecCommand(sshClient, `rm -v "${remoteFilePath}"`);
-        succeed(`Deploy to staging successful: ${chalk.green(config.stagingDir)}`);
+        // Connect to the SSH server
+        progress(`Connecting to ${chalk.cyan(`${host}:${port}`)}...`);
+        const privateKey =
+            'privateKey' in config
+                ? config.privateKey
+                : await fs.readFile(path.resolve(localDir, config.privateKeyFile), {
+                      encoding: 'utf-8'
+                  });
+        const sftpClient = new SshClient();
 
-        progress('Swapping staging and production...');
-        const targetDirExists = !!(await sftpClient.exists(remoteTargetDir));
-        if (targetDirExists) {
-            await sshExecCommand(sshClient, `mv "${remoteTargetDir}" "${remoteTargetDir}.old"`);
+        await sftpClient.connect({
+            host,
+            username,
+            port,
+            privateKey
+        });
+        const sshClient = (sftpClient as any).client as Client;
+        succeed(`Connected to ${chalk.cyan(`${host}:${port}`)}`);
+
+        try {
+            const remoteFilePath = path.join(uploadDir, `build-${new Date().getTime()}.tar.gz`).replace(path.sep, '/');
+
+            await uploadFile({
+                sftpClient,
+                localFilePath: tempFile.path,
+                remoteFilePath,
+                fileSize,
+                progress,
+                succeed
+            });
+
+            await deployToStaging({
+                sshClient,
+                stagingDir,
+                remoteFilePath,
+                progress,
+                succeed
+            });
+
+            await swapStagingWithProduction({
+                sftpClient,
+                targetDir,
+                stagingDir,
+                progress,
+                succeed
+            });
+        } finally {
+            await sftpClient.end();
         }
-        await sshExecCommand(sshClient, `mv "${remoteStagingDir}" "${remoteTargetDir}"`);
-        if (targetDirExists) {
-            await sshExecCommand(sshClient, `rm -rf "${remoteTargetDir}.old"`);
-        }
-        succeed(`Upload successful: ${chalk.green(config.targetDir)}`);
-        await sshExecCommand(sshClient, `rm -rf "${remoteTargetDir}"`);
     } finally {
+        console.log('removing ', tempFile.path);
         await tempFile.cleanup();
-        await sftpClient.end();
     }
 }

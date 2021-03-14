@@ -1,4 +1,5 @@
 import { Client } from 'ssh2';
+import { bashEscape } from './util/bash-escape';
 
 /**
  * Executes a command on an (open) SSH2 client
@@ -8,15 +9,23 @@ import { Client } from 'ssh2';
  */
 export function sshExecCommand(
     conn: Client,
-    cmd: string
+    cmd: string,
+    args: string[] = [],
+    verbose = false
 ): Promise<{
     stdout: string;
     stderr: string;
+    verbose?: boolean;
 }> {
+    const commandLine = `${[cmd, ...args].map(bashEscape).join(' ')}`;
+    if (verbose) {
+        console.log(`Running ${commandLine}`);
+    }
+
     return new Promise((resolve, reject) => {
         let stdout = '';
         let stderr = '';
-        conn.exec(cmd, (err, stream) => {
+        conn.exec(commandLine, (err, stream) => {
             if (err) {
                 reject(err);
                 return;
@@ -27,7 +36,7 @@ export function sshExecCommand(
                         resolve({ stdout, stderr });
                     } else {
                         const error = new Error(`Command returned non-zero error code: ${code} (signal: ${signal})`);
-                        Object.assign(error, { stdout, stderr, code, signal, cmd });
+                        Object.assign(error, { stdout, stderr, code, signal, cmd: commandLine });
                         reject(error);
                     }
                 })
