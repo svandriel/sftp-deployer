@@ -62,6 +62,7 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
         progress: x => spinner.start(x),
         succeed: y => spinner.succeed(y)
     };
+    const privateKeyDisplay = isKey ? 'Directly provided' : path.resolve(process.cwd(), validatedOptions.key);
     const config: SftpDeployConfig = isKey
         ? {
               ...configBase,
@@ -69,7 +70,7 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
           }
         : {
               ...configBase,
-              privateKeyFile: validatedOptions.key
+              privateKeyFile: path.resolve(process.cwd(), validatedOptions.key)
           };
 
     console.log(`Running SFTP deploy: ${chalk.cyan(`${config.username}@${config.host}:${config.port}`)}`);
@@ -77,6 +78,7 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
     console.log(`- Target directory: ${chalk.green(config.targetDir)}`);
     console.log(`- Staging directory: ${chalk.green(config.stagingDir)}`);
     console.log(`- Upload directory: ${chalk.green(config.uploadDir)}`);
+    console.log(`- Private key: ${chalk.green(privateKeyDisplay)}`);
     console.log();
     await sftpDeployer(config);
 }
