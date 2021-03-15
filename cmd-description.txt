@@ -5,7 +5,7 @@ Deploys a directory via SFTP by these steps:
 - Swaps the staging and target directories
 - Cleans uploaded file and old target directory
 
-A configuration file called .sftp.json can also be used instead of providing options:
+A configuration file called .sftp.json can also be used in addition to providing options:
 
 {
     "host": "ssh.example.com",
@@ -13,4 +13,4 @@ A configuration file called .sftp.json can also be used instead of providing opt
 }
 
 Explicitly provided options take precendence over those in the configuration file.
-The keys in the .sftp.json file are the same as the long-form versions on the options.
+The keys in the .sftp.json file are the same as the long-form versions of the options.
