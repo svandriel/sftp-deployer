@@ -2,11 +2,11 @@ export type SftpDeployConfig = SftpDeployConfigWithPrivateKey | SftpDeployConfig
 
 export interface SftpDeployConfigBase {
     host: string;
-    port: number;
+    port?: number;
     username: string;
     localDir: string;
     targetDir: string;
-    stagingDir: string;
+    stagingDir?: string;
     uploadDir: string;
     progress?: (text: string) => void;
     succeed?: (text: string) => void;

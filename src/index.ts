@@ -16,7 +16,8 @@ import { noop } from './util/noop';
 export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
     const progress = config.progress || noop;
     const succeed = config.succeed || noop;
-    const { host, port, username, localDir, stagingDir, targetDir, uploadDir } = config;
+    const { host, port = 22, username, localDir, targetDir, uploadDir } = config;
+    const stagingDir = config.stagingDir ?? `${config.targetDir}.staging`;
 
     // Create temp filename
     const tempFile = await tmp.file({

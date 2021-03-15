@@ -53,14 +53,14 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
 
     const configBase: SftpDeployConfigBase = {
         host: validatedOptions.host,
-        port: validatedOptions.port ?? 22,
+        port: validatedOptions.port,
         username: validatedOptions.user,
         localDir: validatedOptions.local,
         targetDir: validatedOptions.target,
-        stagingDir: validatedOptions.staging || `${validatedOptions.target}.staging`,
+        stagingDir: validatedOptions.staging,
         uploadDir: validatedOptions.upload,
-        progress: x => spinner.start(x),
-        succeed: y => spinner.succeed(y)
+        progress: text => spinner.start(text),
+        succeed: text => spinner.succeed(text)
     };
     const privateKeyDisplay = isKey ? 'Directly provided' : path.resolve(process.cwd(), validatedOptions.key);
     const config: SftpDeployConfig = isKey
