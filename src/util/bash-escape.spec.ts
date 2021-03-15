@@ -9,12 +9,12 @@ describe('bashEscape', () => {
             const expectedOutput = `Testing\\${ch}OneTwo`;
             expect(bashEscape(input)).toBe(expectedOutput);
         });
+    });
 
-        it('escapes from hell', () => {
-            expect(bashEscape('And then I\'d have to say: "Ah!"')).toBe(
-                'And\\ then\\ I\\\'d\\ have\\ to\\ say:\\ \\"Ah\\!\\"'
-            );
-        });
+    it('escapes from hell', () => {
+        expect(bashEscape('And then I\'d have to say: "Ah!"')).toBe(
+            'And\\ then\\ I\\\'d\\ have\\ to\\ say:\\ \\"Ah\\!\\"'
+        );
     });
 });
 
