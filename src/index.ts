@@ -26,7 +26,7 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
 
     try {
         // Compress the folder to the temp file
-        const fileSize = await compressDirectory({
+        await compressDirectory({
             sourceDir: localDir,
             targetFile: tempFile.path,
             progress,
@@ -59,7 +59,6 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
                 sftpClient,
                 localFilePath: tempFile.path,
                 remoteFilePath,
-                fileSize,
                 progress,
                 succeed
             });

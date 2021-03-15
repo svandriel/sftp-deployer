@@ -1,12 +1,12 @@
 import bytes from 'bytes';
 import chalk from 'chalk';
+import fs from 'fs-extra';
 import SshClient from 'ssh2-sftp-client';
 
 interface UploadFileOpts {
     sftpClient: SshClient;
     localFilePath: string;
     remoteFilePath: string;
-    fileSize: number;
     progress: (text: string) => void;
     succeed: (text: string) => void;
 }
@@ -15,11 +15,12 @@ export async function uploadFile({
     sftpClient,
     localFilePath,
     remoteFilePath,
-    fileSize,
     progress,
     succeed
 }: UploadFileOpts): Promise<void> {
     progress('Uploading...');
+    const stat = await fs.stat(localFilePath);
+    const fileSize = stat.size;
     const startUpload = new Date().getTime();
     await sftpClient.fastPut(localFilePath, remoteFilePath, {
         step(totalTransferred) {

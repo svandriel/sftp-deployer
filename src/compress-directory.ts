@@ -18,7 +18,7 @@ export async function compressDirectory({
     targetFile,
     progress = noop,
     succeed = noop
-}: CompressDirectoryOptions): Promise<number> {
+}: CompressDirectoryOptions): Promise<void> {
     progress(`Compressing ${chalk.cyan(path.relative(process.cwd(), sourceDir))} directory...`);
     await tar.c(
         {
@@ -31,5 +31,4 @@ export async function compressDirectory({
     const tarStat = await fs.stat(targetFile);
     const fileSize = tarStat.size;
     succeed(`Compressed build folder: ${chalk.cyan(bytes(fileSize))}`);
-    return fileSize;
 }
