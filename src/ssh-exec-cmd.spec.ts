@@ -19,8 +19,6 @@ describe('sshExecCommand', () => {
         stdout.stderr.emit('data', Buffer.from('Standard error', 'utf-8'));
         stdout.emit('close', 0);
 
-        await new Promise(resolve => setTimeout(resolve, 10));
-
         const result = await resultPromise;
         expect(exec).toHaveBeenCalledTimes(1);
         expect(exec.mock.calls.length).toBe(1);
