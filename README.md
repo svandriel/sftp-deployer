@@ -1,6 +1,6 @@
 # sftp-deployer
 
-The fastest SFTP deployer around.
+A command-line tool for lightning-fast SFTP deployments.
 
 - Transfers a directory as a single compressed file
 - Minimizes downtime of target directory with [blue/green deployment](https://en.wikipedia.org/wiki/Blue-green_deployment)
@@ -17,14 +17,14 @@ npm install -g sftp-deployer
 
 ## Usage
 
-The following command uploads the `./dir` directory to a remote SSH host, to `/var/www/uploads`:
+The following command uploads the contents of the `./build` directory to a remote SSH host, to `/var/www/build`:
 
 ```
 sftp-deployer --host example.com \
   --user bob \
   --key private_key.pem \
-  --local ./dir \
-  --target /var/www/uploads
+  --local ./build \
+  --target /var/www/build
 ```
 
 Available options:
@@ -53,8 +53,8 @@ Each of the options listed above may also be specified in a configuration file c
   "port": 1234, /* Optional, defaults to 22 */
   "user": "bob"
   "key": "private_key.pem"
-  "local": "./dir",
-  "target": "/var/www/uploads",
+  "local": "./build",
+  "target": "/var/www/build",
   "staging": "/var/www/incoming/uploads", /* Optional, defaults to target directory + .staging */
   "upload": "/my/upload/dir" /* Optional, defaults to /var/tmp */
 }

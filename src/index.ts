@@ -13,6 +13,10 @@ import { SftpDeployConfig } from './types/config';
 import { uploadFile } from './upload-file';
 import { noop } from './util/noop';
 
+/**
+ * Deploys the contents of a directory via SFTP to a remote directory.
+ * @param config The deployment configuration
+ */
 export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
     const progress = config.progress || noop;
     const succeed = config.succeed || noop;
