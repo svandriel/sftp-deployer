@@ -83,7 +83,6 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
             await sftpClient.end();
         }
     } finally {
-        console.log('removing ', tempFile.path);
         await tempFile.cleanup();
     }
 }

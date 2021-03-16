@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import chalk from 'chalk';
 import { program } from 'commander';
 import fs from 'fs-extra';
@@ -53,11 +55,11 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
 
     const configBase: SftpDeployConfigBase = {
         host: validatedOptions.host,
-        port: validatedOptions.port,
+        port: validatedOptions.port ?? 22,
         username: validatedOptions.user,
         localDir: validatedOptions.local,
         targetDir: validatedOptions.target,
-        stagingDir: validatedOptions.staging,
+        stagingDir: validatedOptions.staging ?? `${validatedOptions.target}.staging`,
         uploadDir: validatedOptions.upload,
         progress: text => spinner.start(text),
         succeed: text => spinner.succeed(text)
