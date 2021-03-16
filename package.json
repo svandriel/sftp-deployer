@@ -1,6 +1,6 @@
 {
   "name": "sftp-deployer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A command-line tool for lightning-fast SFTP deployments",
   "main": "dist/index.js",
   "bin": {
