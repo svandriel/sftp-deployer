@@ -27,7 +27,7 @@
     "upload"
   ],
   "author": "Sander van Driel <sander.vandriel@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/bytes": "^3.1.0",
     "@types/fs-extra": "^9.0.8",
