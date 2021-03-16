@@ -50,7 +50,7 @@ Each of the options listed above may also be specified in a configuration file c
 ```javascript
 {
   "host": "example.com",
-  "port": "1234", /* Optional, defaults to 22 */
+  "port": 1234, /* Optional, defaults to 22 */
   "user": "bob"
   "key": "private_key.pem"
   "local": "./dir",
