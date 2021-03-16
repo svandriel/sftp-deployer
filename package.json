@@ -16,10 +16,15 @@
     "lint:fix": "eslint \"src/**/*.{ts,json}\" --fix",
     "version": "npm run verify"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svandriel/sftp-deployer.git"
+  },
   "keywords": [
-    "typescript",
-    "node",
-    "boilerplate"
+    "sftp",
+    "ssh",
+    "deploy",
+    "upload"
   ],
   "author": "Sander van Driel <sander.vandriel@gmail.com>",
   "license": "ISC",
