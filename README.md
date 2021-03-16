@@ -5,7 +5,7 @@ The fastest SFTP deployer around.
 - Transfers a directory as a single compressed file
 - Minimizes downtime of target directory with [blue/green deployment](https://en.wikipedia.org/wiki/Blue-green_deployment)
 
-![SFTP deployer demo](demo.gif)
+![SFTP deployer demo](https://github.com/svandriel/sftp-deployer/blob/master/demo.gif?raw=true)
 
 ## Install
 
