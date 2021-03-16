@@ -1,6 +1,7 @@
 .editorconfig
 .eslintignore
 .eslintrc.json
+.github
 .prettierignore
 .prettierrc.json
 .sftp.json
@@ -9,7 +10,9 @@
 *.spec.d.ts
 *.spec.js
 coverage
+demo.gif
 jest.config.js
 node_modules
 src
+test.yml
 tsconfig.json
