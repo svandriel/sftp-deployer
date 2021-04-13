@@ -58,7 +58,7 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
         succeed(`Connected to ${chalk.cyan(`${host}:${port}`)}`);
 
         try {
-            const remoteFilePath = path.join(uploadDir, `build-${new Date().getTime()}.tar.gz`).replace(path.sep, '/');
+            const remoteFilePath = `${uploadDir}/build-${new Date().getTime()}.tar.gz`;
 
             await uploadFile({
                 sftpClient,
