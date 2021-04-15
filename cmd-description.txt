@@ -12,5 +12,7 @@ A configuration file called .sftp.json can also be used in addition to providing
     ...
 }
 
-Explicitly provided options take precendence over those in the configuration file.
+To use another configuration filename, use the --config option.
+
+Explicitly provided options take precedence over those in the configuration file.
 The keys in the .sftp.json file are the same as the long-form versions of the options.

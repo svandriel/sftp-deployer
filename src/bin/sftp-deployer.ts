@@ -16,12 +16,13 @@ const descriptionPath = path.join(__dirname, '..', '..', 'cmd-description.txt');
 const pkg = fs.readJsonSync(pkgPath);
 const description = fs.readFileSync(descriptionPath).toString().trim();
 
-const CONFIG_FILENAME = '.sftp.json';
+const DEFAULT_CONFIG_FILENAME = '.sftp.json';
 
 program
     .name(pkg.name)
     .description(`${pkg.description}\n\n${description}`)
     .version(pkg.version)
+    .option('-c, --config <config file>', 'configuration file to use', DEFAULT_CONFIG_FILENAME)
     .option('-h, --host <host>', 'hostname to connect to')
     .option('-p, --port <port>', 'SSH port to use (defaults to 22)', x => Number.parseInt(x, 10))
     .option('-u, --user <username>', 'the ssh username')
@@ -86,13 +87,14 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
 }
 
 async function validateOptions(opts: Partial<CmdOptions>): Promise<CmdOptions> {
-    const configFromFile = await loadConfigFromFile();
+    const configFromFile = await loadConfigFromFile(opts.config);
     const mergedOptions = {
         ...configFromFile,
         ...removeUndefineds(opts)
     } as CmdOptions;
 
     return {
+        config: requireProp(mergedOptions, 'config'),
         host: requireProp(mergedOptions, 'host'),
         port: requireProp(mergedOptions, 'port'),
         user: requireProp(mergedOptions, 'user'),
@@ -104,11 +106,11 @@ async function validateOptions(opts: Partial<CmdOptions>): Promise<CmdOptions> {
     };
 }
 
-async function loadConfigFromFile(): Promise<Partial<CmdOptions>> {
+async function loadConfigFromFile(configFile: string = DEFAULT_CONFIG_FILENAME): Promise<Partial<CmdOptions>> {
     try {
-        return await fs.readJSON(path.join(process.cwd(), CONFIG_FILENAME));
+        return await fs.readJSON(path.join(process.cwd(), configFile));
     } catch (err) {
-        if (err.code === 'ENOENT') {
+        if (err.code === 'ENOENT' && configFile === DEFAULT_CONFIG_FILENAME) {
             return {};
         }
         throw err;

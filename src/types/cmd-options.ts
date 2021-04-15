@@ -1,4 +1,5 @@
 export interface CmdOptions {
+    config: string;
     host: string;
     port: number;
     user: string;
