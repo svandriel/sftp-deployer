@@ -30,9 +30,9 @@ describe('uploadFile', () => {
             /* no-op */
             step = _opts.step;
         });
-        const sftpClient = ({
+        const sftpClient = {
             fastPut
-        } as unknown) as SshClient;
+        } as unknown as SshClient;
         await uploadFile({
             sftpClient,
             localFilePath: tempFile.path,

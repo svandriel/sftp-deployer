@@ -10,9 +10,9 @@ describe('sshExecCommand', () => {
         const exec = jest.fn().mockImplementation((_commandLine, callback) => {
             callback(null, stdout);
         });
-        const client = ({
+        const client = {
             exec
-        } as unknown) as Client;
+        } as unknown as Client;
         const resultPromise = sshExecCommand(client, 'ls', ['-la']);
 
         stdout.emit('data', Buffer.from('Standard out', 'utf-8'));
