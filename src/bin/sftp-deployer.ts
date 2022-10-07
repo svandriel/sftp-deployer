@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import chalk from 'chalk';
 import { program } from 'commander';
 import fs from 'fs-extra';
@@ -10,6 +9,7 @@ import { inspect } from 'util';
 import { sftpDeployer } from '..';
 import { CmdOptions } from '../types/cmd-options';
 import { SftpDeployConfig, SftpDeployConfigBase } from '../types/config';
+import { removeUndefineds } from '../util/remove-undefineds';
 
 const pkgPath = path.join(__dirname, '..', '..', 'package.json');
 const descriptionPath = path.join(__dirname, '..', '..', 'cmd-description.txt');
@@ -110,27 +110,18 @@ async function loadConfigFromFile(configFile: string = DEFAULT_CONFIG_FILENAME):
     try {
         return await fs.readJSON(path.join(process.cwd(), configFile));
     } catch (err) {
-        if (err.code === 'ENOENT' && configFile === DEFAULT_CONFIG_FILENAME) {
+        const exception = err as NodeJS.ErrnoException;
+        if (exception.code === 'ENOENT' && configFile === DEFAULT_CONFIG_FILENAME) {
             return {};
         }
+
         throw err;
     }
 }
 
 function requireProp<T, K extends keyof T>(obj: T, propName: K): T[K] {
     if (!obj[propName]) {
-        throw new Error(`Missing --${propName}. Use --help for syntax help`);
+        throw new Error(`Missing --${String(propName)}. Use --help for syntax help`);
     }
     return obj[propName];
-}
-
-function removeUndefineds<T>(obj: T): T {
-    const result: any = {};
-    Object.entries(obj).map(([key, value]) => {
-        if (typeof value !== 'undefined') {
-            result[key] = value;
-        }
-    });
-
-    return result as T;
 }
