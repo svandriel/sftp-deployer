@@ -1,5 +1,9 @@
 # sftp-deployer
 
+![Build status](https://github.com/svandriel/sftp-deployer/actions/workflows/node.js.yml/badge.svg?branch=master)
+
+![Version](https://img.shields.io/github/package-json/v/svandriel/sftp-deployer?color=%2300d000&label=Latest%20version&style=plastic)
+
 A command-line tool for lightning-fast SFTP deployments.
 
 - Transfers a directory as a single compressed file
