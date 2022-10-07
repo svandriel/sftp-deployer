@@ -48,6 +48,7 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
                   });
         const sftpClient = new SshClient();
 
+        const startConnect = new Date().getTime();
         await sftpClient.connect({
             host,
             username,
@@ -55,7 +56,8 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
             privateKey
         });
         const sshClient = (sftpClient as any).client as Client;
-        succeed(`Connected to ${chalk.cyan(`${host}:${port}`)}`);
+        const elapsedConnect = 0.001 * (new Date().getTime() - startConnect);
+        succeed(`Connected to ${chalk.cyan(`${host}:${port}`)} ${chalk.gray(`[${elapsedConnect.toFixed(1)}s]`)}`);
 
         try {
             const remoteFilePath = `${uploadDir}/build-${new Date().getTime()}.tar.gz`;
