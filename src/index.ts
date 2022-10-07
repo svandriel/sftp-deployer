@@ -2,14 +2,14 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
-import { Client } from 'ssh2';
-import SshClient from 'ssh2-sftp-client';
+import SftpClient from 'ssh2-sftp-client';
 import tmp from 'tmp-promise';
 
 import { compressDirectory } from './compress-directory';
 import { deployToStaging } from './deploy-to-staging';
 import { swapStagingWithProduction } from './swap-staging-with-production';
 import { SftpDeployConfig } from './types/config';
+import { SftpClientWithSsh } from './types/sftp-client-with-ssh';
 import { uploadFile } from './upload-file';
 import { noop } from './util/noop';
 
@@ -46,7 +46,7 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
                 : await fs.readFile(path.resolve(localDir, config.privateKeyFile), {
                       encoding: 'utf-8'
                   });
-        const sftpClient = new SshClient();
+        const sftpClient = new SftpClient() as SftpClientWithSsh;
 
         const startConnect = new Date().getTime();
         await sftpClient.connect({
@@ -55,7 +55,7 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
             port,
             privateKey
         });
-        const sshClient = (sftpClient as any).client as Client;
+        const sshClient = sftpClient.client;
         const elapsedConnect = 0.001 * (new Date().getTime() - startConnect);
         succeed(`Connected to ${chalk.cyan(`${host}:${port}`)} ${chalk.gray(`[${elapsedConnect.toFixed(1)}s]`)}`);
 

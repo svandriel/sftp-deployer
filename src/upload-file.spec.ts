@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import SshClient from 'ssh2-sftp-client';
+import SftpClient from 'ssh2-sftp-client';
 import tmp from 'tmp-promise';
 
 import { uploadFile } from './upload-file';
@@ -32,7 +32,7 @@ describe('uploadFile', () => {
         });
         const sftpClient = {
             fastPut
-        } as unknown as SshClient;
+        } as unknown as SftpClient;
         await uploadFile({
             sftpClient,
             localFilePath: tempFile.path,

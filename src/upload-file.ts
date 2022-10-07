@@ -1,10 +1,10 @@
 import bytes from 'bytes';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import SshClient from 'ssh2-sftp-client';
+import SftpClient from 'ssh2-sftp-client';
 
 interface UploadFileOpts {
-    sftpClient: SshClient;
+    sftpClient: SftpClient;
     localFilePath: string;
     remoteFilePath: string;
     progress: (text: string) => void;
