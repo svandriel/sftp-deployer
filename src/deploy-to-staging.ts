@@ -16,10 +16,12 @@ export async function deployToStaging({
     remoteFilePath: string;
     succeed: (text: string) => void;
 }): Promise<void> {
+    const startTime = new Date().getTime();
     progress('Deploying to staging...');
     await sshExecCommand(sshClient, 'rm', ['-rf', stagingDir]);
     await sshExecCommand(sshClient, 'mkdir', ['-p', stagingDir]);
     await sshExecCommand(sshClient, 'tar', ['xf', remoteFilePath, '-C', stagingDir]);
     await sshExecCommand(sshClient, 'rm', ['-v', remoteFilePath]);
-    succeed(`Deploy to staging successful: ${chalk.green(stagingDir)}`);
+    const elapsed = 0.001 * (new Date().getTime() - startTime);
+    succeed(`Deploy to staging successful: ${chalk.green(stagingDir)} ${chalk.gray(`[${elapsed.toFixed(1)}s]`)}`);
 }
