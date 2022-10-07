@@ -1,10 +1,10 @@
 import chalk from 'chalk';
-import { Client } from 'ssh2';
-import SshClient from 'ssh2-sftp-client';
+
 import { sshExecCommand } from './ssh-exec-cmd';
+import { SftpClientWithSsh } from './types/sftp-client-with-ssh';
 
 export interface SwapStagingWithProductionOptions {
-    sftpClient: SshClient;
+    sftpClient: SftpClientWithSsh;
     targetDir: string;
     stagingDir: string;
     progress: (text: string) => void;
@@ -18,7 +18,7 @@ export async function swapStagingWithProduction({
     progress,
     succeed
 }: SwapStagingWithProductionOptions): Promise<void> {
-    const sshClient = (sftpClient as any).client as Client;
+    const sshClient = sftpClient.client;
     progress('Swapping staging and production...');
     const targetDirExists = !!(await sftpClient.exists(targetDir));
     if (targetDirExists) {
