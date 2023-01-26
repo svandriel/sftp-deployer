@@ -4,6 +4,7 @@ export interface CmdOptions {
     port: number;
     user: string;
     key: string;
+    password?: string;
     local: string;
     target: string;
     staging?: string;

@@ -20,7 +20,7 @@ import { noop } from './util/noop';
 export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
     const progress = config.progress || noop;
     const succeed = config.succeed || noop;
-    const { host, port = 22, username, localDir, targetDir, uploadDir } = config;
+    const { host, port = 22, username, localDir, targetDir, uploadDir, privateKeyPassword: passphrase } = config;
     const stagingDir = config.stagingDir ?? `${config.targetDir}.staging`;
 
     // Create temp filename
@@ -53,7 +53,8 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
             host,
             username,
             port,
-            privateKey
+            privateKey,
+            passphrase
         });
         const sshClient = sftpClient.client;
         const elapsedConnect = 0.001 * (new Date().getTime() - startConnect);
