@@ -57,9 +57,20 @@ describe('uploadFile', () => {
         // Check the progress and succeed calls
         expect(progress).toHaveBeenCalledTimes(4);
         expect(progress).toHaveBeenNthCalledWith(1, 'Uploading...');
-        expect(progress).toHaveBeenNthCalledWith(2, `Uploading... ${chalk.bold('0%')} [${chalk.cyan('0B')}]`);
-        expect(progress).toHaveBeenNthCalledWith(3, `Uploading... ${chalk.bold('27%')} [${chalk.cyan('4B')}]`);
-        expect(progress).toHaveBeenNthCalledWith(4, `Uploading... ${chalk.bold('100%')} [${chalk.cyan('15B')}]`);
-        expect(succeed).toHaveBeenCalledWith(`Upload successful ${chalk.gray('[0.0s]')}`);
+        expect(progress).toHaveBeenNthCalledWith(
+            2,
+            `Uploading... ${chalk.bold('0%')} [${chalk.cyan('0B')}]`
+        );
+        expect(progress).toHaveBeenNthCalledWith(
+            3,
+            `Uploading... ${chalk.bold('27%')} [${chalk.cyan('4B')}]`
+        );
+        expect(progress).toHaveBeenNthCalledWith(
+            4,
+            `Uploading... ${chalk.bold('100%')} [${chalk.cyan('15B')}]`
+        );
+        expect(succeed).toHaveBeenCalledWith(
+            `Upload successful ${chalk.gray('[0.0s]')}`
+        );
     });
 });

@@ -24,10 +24,18 @@ export async function uploadFile({
     const startUpload = new Date().getTime();
     await sftpClient.fastPut(localFilePath, remoteFilePath, {
         step(totalTransferred) {
-            const percentage = `${((100 * totalTransferred) / fileSize).toFixed(0)}%`;
-            progress(`Uploading... ${chalk.bold(percentage)} [${chalk.cyan(`${bytes(totalTransferred)}`)}]`);
+            const percentage = `${((100 * totalTransferred) / fileSize).toFixed(
+                0
+            )}%`;
+            progress(
+                `Uploading... ${chalk.bold(percentage)} [${chalk.cyan(
+                    `${bytes(totalTransferred)}`
+                )}]`
+            );
         }
     });
     const elapsedUpload = 0.001 * (new Date().getTime() - startUpload);
-    succeed(`Upload successful ${chalk.gray(`[${elapsedUpload.toFixed(1)}s]`)}`);
+    succeed(
+        `Upload successful ${chalk.gray(`[${elapsedUpload.toFixed(1)}s]`)}`
+    );
 }

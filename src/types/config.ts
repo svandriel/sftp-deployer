@@ -1,4 +1,6 @@
-export type SftpDeployConfig = SftpDeployConfigWithPrivateKey | SftpDeployConfigWithPrivateKeyFile;
+export type SftpDeployConfig =
+    | SftpDeployConfigWithPrivateKey
+    | SftpDeployConfigWithPrivateKeyFile;
 
 export interface SftpDeployConfigBase {
     /**
@@ -55,7 +57,8 @@ export interface SftpDeployConfigWithPrivateKey extends SftpDeployConfigBase {
     privateKeyPassword?: string;
 }
 
-export interface SftpDeployConfigWithPrivateKeyFile extends SftpDeployConfigBase {
+export interface SftpDeployConfigWithPrivateKeyFile
+    extends SftpDeployConfigBase {
     /**
      * The path to the file that holds the private key to use for the SSH/SFTP connection.
      */
