@@ -29,7 +29,10 @@ export async function sshExecCommand(
     return handleCommand(channel, commandLine);
 }
 
-function handleCommand(stream: ClientChannel, commandLine: string): Promise<SshCommandResult> {
+function handleCommand(
+    stream: ClientChannel,
+    commandLine: string
+): Promise<SshCommandResult> {
     return new Promise<SshCommandResult>((resolve, reject) => {
         let stdout = '';
         let stderr = '';
@@ -38,8 +41,16 @@ function handleCommand(stream: ClientChannel, commandLine: string): Promise<SshC
                 if (code === 0) {
                     resolve({ stdout, stderr });
                 } else {
-                    const error = new Error(`Command returned non-zero error code: ${code} (signal: ${signal})`);
-                    Object.assign(error, { stdout, stderr, code, signal, cmd: commandLine });
+                    const error = new Error(
+                        `Command returned non-zero error code: ${code} (signal: ${signal})`
+                    );
+                    Object.assign(error, {
+                        stdout,
+                        stderr,
+                        code,
+                        signal,
+                        cmd: commandLine
+                    });
                     reject(error);
                 }
             })

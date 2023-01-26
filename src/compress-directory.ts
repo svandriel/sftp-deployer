@@ -19,7 +19,11 @@ export async function compressDirectory({
     progress = noop,
     succeed = noop
 }: CompressDirectoryOptions): Promise<void> {
-    progress(`Compressing ${chalk.cyan(path.relative(process.cwd(), sourceDir))} directory...`);
+    progress(
+        `Compressing ${chalk.cyan(
+            path.relative(process.cwd(), sourceDir)
+        )} directory...`
+    );
     await tar.c(
         {
             gzip: true,

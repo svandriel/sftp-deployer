@@ -22,11 +22,20 @@ program
     .name(pkg.name)
     .description(`${pkg.description}\n\n${description}`)
     .version(pkg.version)
-    .option('-c, --config <config file>', 'configuration file to use', DEFAULT_CONFIG_FILENAME)
+    .option(
+        '-c, --config <config file>',
+        'configuration file to use',
+        DEFAULT_CONFIG_FILENAME
+    )
     .option('-h, --host <host>', 'hostname to connect to')
-    .option('-p, --port <port>', 'SSH port to use (defaults to 22)', x => Number.parseInt(x, 10))
+    .option('-p, --port <port>', 'SSH port to use (defaults to 22)', x =>
+        Number.parseInt(x, 10)
+    )
     .option('-u, --user <username>', 'the ssh username')
-    .option('-k, --key <key_or_file>', 'path to private key file, or private key itself')
+    .option(
+        '-k, --key <key_or_file>',
+        'path to private key file, or private key itself'
+    )
     .option('--password <password>', 'the password to the private key')
     .option('-l, --local <path>', 'directory to upload')
     .option('-t, --target <target_dir>', 'target directory on remote host')
@@ -34,7 +43,11 @@ program
         '-s, --staging <staging_dir>',
         'staging directory on remote host (defaults to the target directory + .staging)'
     )
-    .option('-u, --upload <upload_dir>', 'upload directory on remote host', '/var/tmp')
+    .option(
+        '-u, --upload <upload_dir>',
+        'upload directory on remote host',
+        '/var/tmp'
+    )
     .parse(process.argv);
 
 const opts = program.opts() as Partial<CmdOptions>;
@@ -53,7 +66,9 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
     const validatedOptions = await validateOptions(opts);
 
     // Determine if the 'key' property is a file or an actual private key
-    const isKey = /^-----BEGIN OPENSSH PRIVATE KEY-----/.test(validatedOptions.key);
+    const isKey = /^-----BEGIN OPENSSH PRIVATE KEY-----/.test(
+        validatedOptions.key
+    );
 
     const configBase: SftpDeployConfigBase = {
         host: validatedOptions.host,
@@ -61,12 +76,15 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
         username: validatedOptions.user,
         localDir: validatedOptions.local,
         targetDir: validatedOptions.target,
-        stagingDir: validatedOptions.staging ?? `${validatedOptions.target}.staging`,
+        stagingDir:
+            validatedOptions.staging ?? `${validatedOptions.target}.staging`,
         uploadDir: validatedOptions.upload,
         progress: text => spinner.start(text),
         succeed: text => spinner.succeed(text)
     };
-    const privateKeyDisplay = isKey ? 'Directly provided' : path.resolve(process.cwd(), validatedOptions.key);
+    const privateKeyDisplay = isKey
+        ? 'Directly provided'
+        : path.resolve(process.cwd(), validatedOptions.key);
     const config: SftpDeployConfig = isKey
         ? {
               ...configBase,
@@ -79,7 +97,11 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
               privateKeyPassword: validatedOptions.password
           };
 
-    console.log(`Running SFTP deploy: ${chalk.cyan(`${config.username}@${config.host}:${config.port}`)}`);
+    console.log(
+        `Running SFTP deploy: ${chalk.cyan(
+            `${config.username}@${config.host}:${config.port}`
+        )}`
+    );
     console.log(`- Local directory: ${chalk.green(config.localDir)}`);
     console.log(`- Target directory: ${chalk.green(config.targetDir)}`);
     console.log(`- Staging directory: ${chalk.green(config.stagingDir)}`);
@@ -113,12 +135,17 @@ async function validateOptions(opts: Partial<CmdOptions>): Promise<CmdOptions> {
     };
 }
 
-async function loadConfigFromFile(configFile: string = DEFAULT_CONFIG_FILENAME): Promise<Partial<CmdOptions>> {
+async function loadConfigFromFile(
+    configFile: string = DEFAULT_CONFIG_FILENAME
+): Promise<Partial<CmdOptions>> {
     try {
         return await fs.readJSON(path.join(process.cwd(), configFile));
     } catch (err) {
         const exception = err as NodeJS.ErrnoException;
-        if (exception.code === 'ENOENT' && configFile === DEFAULT_CONFIG_FILENAME) {
+        if (
+            exception.code === 'ENOENT' &&
+            configFile === DEFAULT_CONFIG_FILENAME
+        ) {
             return {};
         }
 
@@ -128,7 +155,9 @@ async function loadConfigFromFile(configFile: string = DEFAULT_CONFIG_FILENAME):
 
 function requireProp<T, K extends keyof T>(obj: T, propName: K): T[K] {
     if (!obj[propName]) {
-        throw new Error(`Missing --${String(propName)}. Use --help for syntax help`);
+        throw new Error(
+            `Missing --${String(propName)}. Use --help for syntax help`
+        );
     }
     return obj[propName];
 }
