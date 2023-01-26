@@ -58,7 +58,7 @@
     "ssh2": "^1.1.0",
     "ssh2-sftp-client": "^7.0.0",
     "tar": "^6.1.0",
-    "tmp-promise": "^3.0.2"
+    "tmp-promise": "^3.0.3"
   },
   "devDependencies": {
     "@types/bytes": "^3.1.1",
@@ -75,7 +75,7 @@
     "eslint-plugin-jest": "^27.2.1",
     "husky": "^4.3.8",
     "jest": "^29.4.1",
-    "lint-staged": "^11.0.1",
+    "lint-staged": "^11.2.6",
     "nodemon": "^2.0.12",
     "prettier": "^2.8.3",
     "rimraf": "^3.0.2",
