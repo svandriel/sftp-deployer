@@ -20,7 +20,15 @@ import { noop } from './util/noop';
 export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
     const progress = config.progress || noop;
     const succeed = config.succeed || noop;
-    const { host, port = 22, username, localDir, targetDir, uploadDir, privateKeyPassword: passphrase } = config;
+    const {
+        host,
+        port = 22,
+        username,
+        localDir,
+        targetDir,
+        uploadDir,
+        privateKeyPassword: passphrase
+    } = config;
     const stagingDir = config.stagingDir ?? `${config.targetDir}.staging`;
 
     // Create temp filename
@@ -43,9 +51,12 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
         const privateKey =
             'privateKey' in config
                 ? config.privateKey
-                : await fs.readFile(path.resolve(localDir, config.privateKeyFile), {
-                      encoding: 'utf-8'
-                  });
+                : await fs.readFile(
+                      path.resolve(localDir, config.privateKeyFile),
+                      {
+                          encoding: 'utf-8'
+                      }
+                  );
         const sftpClient = new SftpClient() as SftpClientWithSsh;
 
         const startConnect = new Date().getTime();
@@ -58,7 +69,11 @@ export async function sftpDeployer(config: SftpDeployConfig): Promise<void> {
         });
         const sshClient = sftpClient.client;
         const elapsedConnect = 0.001 * (new Date().getTime() - startConnect);
-        succeed(`Connected to ${chalk.cyan(`${host}:${port}`)} ${chalk.gray(`[${elapsedConnect.toFixed(1)}s]`)}`);
+        succeed(
+            `Connected to ${chalk.cyan(`${host}:${port}`)} ${chalk.gray(
+                `[${elapsedConnect.toFixed(1)}s]`
+            )}`
+        );
 
         try {
             const remoteFilePath = `${uploadDir}/build-${new Date().getTime()}.tar.gz`;

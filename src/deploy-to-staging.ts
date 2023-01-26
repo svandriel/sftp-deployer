@@ -20,8 +20,17 @@ export async function deployToStaging({
     progress('Deploying to staging...');
     await sshExecCommand(sshClient, 'rm', ['-rf', stagingDir]);
     await sshExecCommand(sshClient, 'mkdir', ['-p', stagingDir]);
-    await sshExecCommand(sshClient, 'tar', ['xf', remoteFilePath, '-C', stagingDir]);
+    await sshExecCommand(sshClient, 'tar', [
+        'xf',
+        remoteFilePath,
+        '-C',
+        stagingDir
+    ]);
     await sshExecCommand(sshClient, 'rm', ['-v', remoteFilePath]);
     const elapsed = 0.001 * (new Date().getTime() - startTime);
-    succeed(`Deploy to staging successful: ${chalk.green(stagingDir)} ${chalk.gray(`[${elapsed.toFixed(1)}s]`)}`);
+    succeed(
+        `Deploy to staging successful: ${chalk.green(stagingDir)} ${chalk.gray(
+            `[${elapsed.toFixed(1)}s]`
+        )}`
+    );
 }
