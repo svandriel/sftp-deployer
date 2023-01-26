@@ -27,6 +27,7 @@ program
     .option('-p, --port <port>', 'SSH port to use (defaults to 22)', x => Number.parseInt(x, 10))
     .option('-u, --user <username>', 'the ssh username')
     .option('-k, --key <key_or_file>', 'path to private key file, or private key itself')
+    .option('--password <password>', 'the password to the private key')
     .option('-l, --local <path>', 'directory to upload')
     .option('-t, --target <target_dir>', 'target directory on remote host')
     .option(
@@ -69,11 +70,13 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
     const config: SftpDeployConfig = isKey
         ? {
               ...configBase,
-              privateKey: validatedOptions.key
+              privateKey: validatedOptions.key,
+              privateKeyPassword: validatedOptions.password
           }
         : {
               ...configBase,
-              privateKeyFile: path.resolve(process.cwd(), validatedOptions.key)
+              privateKeyFile: path.resolve(process.cwd(), validatedOptions.key),
+              privateKeyPassword: validatedOptions.password
           };
 
     console.log(`Running SFTP deploy: ${chalk.cyan(`${config.username}@${config.host}:${config.port}`)}`);
@@ -82,6 +85,9 @@ async function main(opts: Partial<CmdOptions>): Promise<void> {
     console.log(`- Staging directory: ${chalk.green(config.stagingDir)}`);
     console.log(`- Upload directory: ${chalk.green(config.uploadDir)}`);
     console.log(`- Private key: ${chalk.green(privateKeyDisplay)}`);
+    if (opts.password) {
+        console.log(`- Private key password: ${chalk.green('****')}`);
+    }
     console.log();
     await sftpDeployer(config);
 }
@@ -99,6 +105,7 @@ async function validateOptions(opts: Partial<CmdOptions>): Promise<CmdOptions> {
         port: requireProp(mergedOptions, 'port'),
         user: requireProp(mergedOptions, 'user'),
         key: requireProp(mergedOptions, 'key'),
+        password: mergedOptions.password,
         local: requireProp(mergedOptions, 'local'),
         target: requireProp(mergedOptions, 'target'),
         staging: mergedOptions.staging,

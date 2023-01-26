@@ -48,6 +48,11 @@ export interface SftpDeployConfigWithPrivateKey extends SftpDeployConfigBase {
      * The private key to use for the SSH/SFTP connection.
      */
     privateKey: string;
+
+    /**
+     * The password to the private key
+     */
+    privateKeyPassword?: string;
 }
 
 export interface SftpDeployConfigWithPrivateKeyFile extends SftpDeployConfigBase {
@@ -55,4 +60,9 @@ export interface SftpDeployConfigWithPrivateKeyFile extends SftpDeployConfigBase
      * The path to the file that holds the private key to use for the SSH/SFTP connection.
      */
     privateKeyFile: string;
+
+    /**
+     * The password to the private key
+     */
+    privateKeyPassword?: string;
 }
