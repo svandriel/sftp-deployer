@@ -39,6 +39,7 @@ Available options:
   -p, --port <port>            SSH port to use (defaults to 22)
   -u, --user <username>        the ssh username
   -k, --key <key_or_file>      path to private key file, or private key itself
+  --password <password>        the password to the private key
   -l, --local <path>           directory to upload
   -t, --target <target_dir>    target directory on remote host
   -s, --staging <staging_dir>  staging directory on remote host
@@ -57,6 +58,7 @@ Each of the options listed above may also be specified in a configuration file c
   "port": 1234, /* Optional, defaults to 22 */
   "user": "bob"
   "key": "private_key.pem"
+  "password": "super_secure", /* Optional, only needed if the key is encrypted */
   "local": "./build",
   "target": "/var/www/build",
   "staging": "/var/www/incoming/uploads", /* Optional, defaults to target directory + .staging */
