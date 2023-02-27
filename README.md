@@ -35,6 +35,7 @@ Available options:
 
 ```
   -V, --version                output the version number
+  -c, --config <config file>   configuration file to use (default: ".sftp.json")
   -h, --host <host>            hostname to connect to
   -p, --port <port>            SSH port to use (defaults to 22)
   -u, --user <username>        the ssh username
@@ -44,13 +45,17 @@ Available options:
   -t, --target <target_dir>    target directory on remote host
   -s, --staging <staging_dir>  staging directory on remote host
                                (defaults to the target directory + .staging)
-  -u, --upload <upload_dir>    upload directory on remote host (default: "/var/tmp")
+  -u, --upload <upload_dir>    upload directory on remote host
+                               (default: "/var/tmp")
   --help                       display help for command
 ```
 
 ## Using a configuration file
 
-Each of the options listed above may also be specified in a configuration file called `.sftp.json`. For example:
+Each of the options listed above may also be specified in a configuration file called `.sftp.json`.
+You may override this filename by using the `-c` option (see above).
+
+For example:
 
 ```javascript
 {
